@@ -36,7 +36,6 @@ class field:
                 #if(j.Y/10+1<=self.y_count):summ+=self.arrow_list[j.X/10][j.Y/10+1].rotation
                 if(j.Y/10-1>=0):summ+=self.arrow_list[j.X/10][j.Y/10-1].rotation
         
-#testtesttest
 
 xCount=5
 yCount=10            
