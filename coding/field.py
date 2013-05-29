@@ -33,7 +33,7 @@ class field:
                 #print j.X
                 summ=0
                 if(j.X/10+1<=self.x_count):summ+=self.arrow_list[j.X/10+1][j.Y/10].rotation
-                #if(j.Y/10+1<=self.y_count):summ+=self.arrow_list[j.X/10][j.Y/10+1].rotation
+                if(j.Y/10+1<=self.y_count):summ+=self.arrow_list[j.X/10][j.Y/10+1].rotation
                 if(j.Y/10-1>=0):summ+=self.arrow_list[j.X/10][j.Y/10-1].rotation
         
 
