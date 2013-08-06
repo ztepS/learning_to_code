@@ -28,11 +28,11 @@ def GetTime(startX,startY,endX,endY):
     finalUrl='http://maps.googleapis.com/maps/api/directions/json?origin='+originCoords+'&destination='+destinationCoords+'&sensor=false&departure_time='+str(int(time.time()))+'&mode=transit'
     response = urllib2.urlopen(finalUrl)
     parsed=json.load(response)
-    
+    #print parsed['status']
     if(parsed['status']<>"ZERO_RESULTS"):
         #print parsed["routes"][0]["legs"][0]["duration"]['text']," | ",
         duration = ParseTime(parsed["routes"][0]["legs"][0]["duration"]['text'])
-        print parsed['status']
+        
         return duration
     else: return -1
 #destinationX=37.652340
@@ -44,8 +44,10 @@ for i in range(10):result[i]=range(10)
 
 markerString=""#"&markers=color:blue%7Clabel:C%7C55.592554,37.663670"
 
-for i in range(-3,3):
-    for j in range(-3,3):
+
+hits=0
+for i in range(-10,10):
+    for j in range(-10,10):
         destinationX=originX+0.02*i
         destinationY=originY+0.02*j
         
@@ -55,6 +57,10 @@ for i in range(-3,3):
         #color:"+color+"%7C"
         if(abs(result[i][j]-0.8)<0.05):
             markerString+="&markers="+str(destinationY)+","+str(destinationX)
+            hits+=1
+            if(hits>36):
+                i=10
+                j=10
             #print result[i][j]
         
     print i
