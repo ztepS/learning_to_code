@@ -16,7 +16,7 @@ for filename in list:
     f = open(filename, 'r')
     a = f.readlines()
 
-    # pick up x-scale
+    # pick up fieldX-scale
     p = re.sub(",",".",a[5])
     p = p.split(' ')
     xs = eval(p[3])*1e-4
@@ -30,8 +30,8 @@ for filename in list:
     # pick up data
     b = a[16:len(a)]
     d = np.zeros(( len(b), len(np.fromstring(a[17], dtype=int, sep=' ')) ))
-    for n,x in enumerate(b):
-        d[n,:]=np.fromstring(x, dtype=int, sep=' ')
+    for n,fieldX in enumerate(b):
+        d[n,:]=np.fromstring(fieldX, dtype=int, sep=' ')
     d = d*zs
     
     psdx=np.zeros([d.shape[0],d.shape[1]/2])

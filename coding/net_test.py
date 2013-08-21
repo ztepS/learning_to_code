@@ -9,6 +9,7 @@ from PIL import Image
 import time
 import json
 
+
 originX=37.663670
 originY=55.592554
 originCoords = str(originY)+','+str(originX)

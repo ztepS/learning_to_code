@@ -17,10 +17,10 @@ import sys
 from PyQt4 import QtGui, QtCore
 
 
-class Example(QtGui.QWidget):
+class Gui(QtGui.QWidget):
     
     def __init__(self):
-        super(Example, self).__init__()
+        super(Gui, self).__init__()
         
         self.initUI()
         
@@ -30,7 +30,9 @@ class Example(QtGui.QWidget):
         qbtn.clicked.connect(QtCore.QCoreApplication.instance().quit)
         qbtn.resize(qbtn.sizeHint())
         qbtn.move(170, 50)       
-        
+        qlist=QtGui.QListWidget(self)
+        #qlist.show()
+        qlist.addItem("QListWidgetItem")
         self.setGeometry(300, 300, 250, 150)
         self.setWindowTitle('Quit button')    
         self.show()
@@ -38,7 +40,7 @@ class Example(QtGui.QWidget):
 def main():
     
     app = QtGui.QApplication(sys.argv)
-    ex = Example()
+    ex = Gui()
     sys.exit(app.exec_())
 
 

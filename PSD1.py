@@ -23,7 +23,7 @@ for filename in list2:
 	f = open(filename, 'r')
 	a = f.readlines()
 
-	# pick up x-scale
+	# pick up fieldX-scale
 	xCount = re.sub(",", ".", a[3])
 	xCount= xCount.split(' ')
 	xCount = eval(xCount[2])
@@ -46,27 +46,27 @@ for filename in list2:
 	# pick up data
 	b = a[16:len(a)]
 	d = np.zeros((len(b), len(np.fromstring(a[17], dtype=float, sep=' '))))
-	for n, x in enumerate(b):
-		d[n, :] = np.fromstring(x, dtype=float, sep=' ')
+	for n, fieldX in enumerate(b):
+		d[n, :] = np.fromstring(fieldX, dtype=float, sep=' ')
 	d = d * zs
 	
 	
 	test2=open("c:/01/test2.txt", 'w')
 	#print d[1][1]
 	
-	x=0
+	fieldX=0
 	for i in range(yCount):
-		y=0
+		fieldY=0
 		for j in range(xCount):
 			
-			test2.write(str(x))
+			test2.write(str(fieldX))
 			test2.write(" ")
-			test2.write(str(y))
+			test2.write(str(fieldY))
 			test2.write(" ")
 			test2.write(str(d[i][j]))
 			test2.write("\n")
-			y+=ys
-		x+=xs
+			fieldY+=ys
+		fieldX+=xs
 	psdx = np.zeros([d.shape[0], d.shape[1] / 2])
 	
 	for i in np.arange(1., d.shape[0]):
@@ -93,7 +93,7 @@ for filename in list2:
 	ax.loglog(vy, psdy)
 	leg.append(filename + '_y')
 	#ax.legend(filename)
-	rms = integrate.trapz(psdx, x=vx)
+	rms = integrate.trapz(psdx, fieldX=vx)
 	# print('/n')
 	print filename, rms
 	
