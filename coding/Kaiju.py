@@ -30,6 +30,24 @@ class Point:
         if (self.stack==[]):return (0,0,0)
         return self.stack[len(self.stack)-1].return_color()
     
+class Explosion_effect:    
+    def __init__(self):
+        self.hp=5
+        
+    def return_symbol(self):
+        return "*"
+    
+    def return_color(self):
+        #self.hp-=0.1
+        if(self.hp<0 or self.hp>5): return(0,0,0)
+        return(int(self.hp*50),0,0)
+        
+    def explode(self,strength):
+        self.hp+=strength
+        if(self.hp>5):self.hp=5
+        return 0
+          
+          
 class Fire:    
     def __init__(self):
         self.hp=5
@@ -38,7 +56,7 @@ class Fire:
         return "*"
     
     def return_color(self):
-        self.hp-=0.1
+        #self.hp-=0.1
         if(self.hp<0 or self.hp>5): return(0,0,0)
         return(int(self.hp*50),0,0)
         
@@ -47,7 +65,14 @@ class Fire:
         if(self.hp>5):self.hp=5
         return 0
     
-        
+    def burn(self,strength):
+        return 0
+                    
+def burn_process(x,y,hp):
+    
+    for k in field[x][y].stack:
+        strength-=k.burn()
+
 class Building:
     def __init__(self,stores):
         self.storesCount=stores
@@ -58,7 +83,7 @@ class Building:
         return self.storesCount
         
     def return_symbol(self):
-        if (self.hp<self.storesCount/5):return"*"
+        if (self.hp<self.storesCount/2):return"*"
         if (self.storesCount<3):return"^"
         if (self.storesCount<15):return"#"
         return "H"
@@ -66,6 +91,15 @@ class Building:
     def return_color(self):
         if (self.hp<self.storesCount/5):return (30,30,30)
         return (200,200,200)
+    
+    def burn(self,strength):
+        if (self.storesCount<3):
+            self.hp-=strength*2
+            return 0.3
+        else:
+            self.hp-=strength*0.2
+            return -0.5
+    
     
 class Road:
     def __init__(self,direction):
@@ -102,14 +136,17 @@ class Water:
 def process_hp():
     for i in range(fieldX):
         for j in range(fieldY):
-            for k in field[i][j].stack:
-                if(k.hp<=0): del k
+            for k in field[i][j].stack[:]:
+                if k.__class__.__name__ == "Explosion_effect": k.hp-=0.1
+                if k.__class__.__name__ == "Fire": burn_process(i,j,k.hp)
+                if(k.hp<=0): 
+                    field[i][j].stack.remove(k)
                 
  
 
 
 def explosion(x,y,strength,decay):
-    field[x][y].stack.append(Fire())
+    
     for i in field[x][y].stack:
     
         strength -= i.explode(strength)
@@ -121,6 +158,7 @@ def explosion(x,y,strength,decay):
     if(field[x][y+1].stack ==[] or field[x][y+1].stack[-1]!=1): explosion(x,y+1,strength-decay,decay)
     if(field[x][y-1].stack ==[] or field[x][y-1].stack[-1]!=1): explosion(x,y-1,strength-decay,decay)
     del field[x][y].stack[-1]
+    field[x][y].stack.append(Explosion_effect())
 
 def generate_town(field,startX,startY,size):
     #field[startX][startY].stack.append(Road(0))
@@ -229,7 +267,7 @@ while not done:
             done = True
         if event.type == pygame.MOUSEBUTTONUP:
             pos = pygame.mouse.get_pos()
-            explosion(int(pos[1]/fontSize)+screenCoordX,int(pos[0]/fontSize)+screenCoordY,2,1)
+            explosion(int(pos[1]/fontSize)+screenCoordX,int(pos[0]/fontSize)+screenCoordY,8,1)
             
             
             
