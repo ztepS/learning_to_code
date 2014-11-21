@@ -26,18 +26,18 @@ class spawner_list:
     def process_spawners_bullet_movement(self):
         for i in self.list:
             i.process_movement()
-            i.draw()
+            i.drawSimpleCircle()
             
     def process_spawners_movement(self):
         if(self.type==1):
             self.pattern1_move()
         
     def move_spawner(self,sp_id,X,Y):
-        self.list[sp_id].X+=X
-        self.list[sp_id].Y+=Y
-        if (check_borders(self.list[sp_id].X,self.list[sp_id].Y)==1) and (self.list[sp_id].bullet_list==[]):
+        self.playerBulletList[sp_id].globalX+=X
+        self.playerBulletList[sp_id].globalY+=Y
+        if (check_borders(self.playerBulletList[sp_id].globalX,self.playerBulletList[sp_id].globalY)==1) and (self.playerBulletList[sp_id].Bullet_list==[]):
             del self.list[sp_id]
-            #print self.list, sp_id
+            #print self.playerBulletList, sp_id
             
     def pattern1(self):
         self.create_spawner(100, 100)
@@ -50,21 +50,21 @@ class spawner_list:
         
 class bullet_spawner:
     def __init__(self,X,Y):
-        self.X=X
-        self.Y=Y
+        self.globalX=X
+        self.globalY=Y
         self.bullet_count = 0
         self.phase = 0
-        self.bullet_list=[]
+        self.Bullet_list=[]
         self.spawn()
     
         
         
-    def draw(self):
-        #pygame.draw.rect(window, (0, 0, 0), (0, 0, screen_borderX, screen_borderY))
-        pygame.draw.circle(window,(255, 255, 255),(int(self.X),int(self.Y)),5)
-        for i in self.bullet_list:
+    def drawSimpleCircle(self):
+        #pygame.drawSimpleCircle.rect(window, (0, 0, 0), (0, 0, screen_borderX, screen_borderY))
+        pygame.drawSimpleCircle.circle(window,(255, 255, 255),(int(self.globalX),int(self.globalY)),5)
+        for i in self.Bullet_list:
             
-            i.draw()
+            i.drawSimpleCircle()
                 
         
     def spawn(self):
@@ -73,38 +73,38 @@ class bullet_spawner:
         self.spawning = True
         #for i in range(self.spawncount):
         self.phase += 0.5
-        self.bullet_list.append(bullet(int(self.X),int(self.Y),math.sin(self.phase)*1,math.cos(self.phase)*1)   ) 
-        #print self.bullet_list
+        self.Bullet_list.append(Bullet(int(self.globalX),int(self.globalY),math.sin(self.phase)*1,math.cos(self.phase)*1)   ) 
+        #print self.Bullet_list
         
     def process_movement(self):
-        for i in self.bullet_list:
+        for i in self.Bullet_list:
             i.move()
-            if (check_borders(i.X,i.Y)==1): 
-                self.bullet_list.remove(i)
+            if (check_borders(i.globalX,i.globalY)==1): 
+                self.Bullet_list.remove(i)
                 
-class bullet:
+class Bullet:
     def __init__(self,X,Y,speedX,speedY):
         #self.bulletid=bulletid
-        self.X = X
-        self.Y = Y
+        self.globalX = X
+        self.globalY = Y
         self.speedX=speedX
         self.speedY=speedY
         #self.framespeed=1/30
         self.color=(random.randrange(0, 256),random.randrange(0, 256),random.randrange(0, 256))
         
-    def draw(self): 
-        gfxdraw.aacircle(window, int(self.X),int(self.Y),6,self.color)
-        gfxdraw.aacircle(window, int(self.X),int(self.Y),5, (255,255,255))
+    def drawSimpleCircle(self): 
+        gfxdraw.aacircle(window, int(self.globalX),int(self.globalY),6,self.color)
+        gfxdraw.aacircle(window, int(self.globalX),int(self.globalY),5, (255,255,255))
         
     def move(self):
-        self.X = self.X + self.speedX
-        self.Y = self.Y + self.speedY
-        if abs(self.X-pygame.mouse.get_pos()[0])<5 and abs(self.Y-pygame.mouse.get_pos()[1])<5:
+        self.globalX = self.globalX + self.speedX
+        self.globalY = self.globalY + self.speedY
+        if abs(self.globalX-pygame.mouse.get_pos()[0])<5 and abs(self.globalY-pygame.mouse.get_pos()[1])<5:
             print "hit"
 
         
 def redraw():
-    pygame.draw.rect(window, (0, 0, 0), (0, 0, screen_borderX, screen_borderY))
+    pygame.drawSimpleCircle.rect(window, (0, 0, 0), (0, 0, screen_borderX, screen_borderY))
     attack1.process_spawners_bullet_movement()
     attack1.process_spawners_movement()
     pygame.display.flip()
@@ -125,7 +125,7 @@ attack1 = spawner_list()
 #attack1.create_spawner(380, 540)
 #attack1.create_spawner(100, 540)
 #attack1.create_spawner(380, 100)
-#spawner1.draw()
+#spawner1.drawSimpleCircle()
 
 #print pygame.mouse.get_pos()[0]
 pygame.display.flip()        

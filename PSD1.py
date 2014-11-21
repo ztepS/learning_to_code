@@ -93,7 +93,7 @@ for filename in list2:
 	ax.loglog(vy, psdy)
 	leg.append(filename + '_y')
 	#ax.legend(filename)
-	rms = integrate.trapz(psdx, fieldX=vx)
+	rms = integrate.trapz(psdx, vx)
 	# print('/n')
 	print filename, rms
 	

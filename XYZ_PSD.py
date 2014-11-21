@@ -4,10 +4,11 @@ import numpy as np
 import scipy as sc
 import re
 import scipy.integrate as integrate
+#import matplotlib
 #import scipy.signal as signal
 # import scipy.stsci.convolve as ss
 import matplotlib.pyplot as plt
-
+#matplotlib.pyplot.xkcd(scale=1, length=100, randomness=2)
 fig = plt.figure()
 ax = fig.add_subplot(111)
 ax.set_ylabel('PSD')
@@ -22,7 +23,7 @@ for filename in list2:
 	p = re.sub(",", ".", a[7])
 	p = p.split(' ')
 	# print (p[6])
-	xs = float(p[6])*10000
+	xs = float(p[6])/10 #*10000
 	
 	ys = xs
 
@@ -95,8 +96,8 @@ for filename in list2:
 	ax.loglog(vy,psdy)
 	leg.append(filename+'_y')
 	ax.legend(filename)
-	rms = integrate.trapz(psdx, fieldX=vx)
-	rms2 = integrate.trapz(psdy, fieldX=vy)
+	rms = integrate.trapz(psdx, vx)
+	rms2 = integrate.trapz(psdy, vy)
 	# print('/n')
 	print filename, rms, rms2
 	

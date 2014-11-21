@@ -71,7 +71,7 @@ class Fire:
 def burn_process(x,y,hp):
     
     for k in field[x][y].stack:
-        strength-=k.burn()
+        k.strength-=k.burn()
 
 class Building:
     def __init__(self,stores):

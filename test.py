@@ -10,9 +10,9 @@ ax = fig.add_subplot(111)
 ax.set_ylabel('PSD')
 ax.set_xlabel('frequency')
 
-list = glob.glob('*.txt')
+playerBulletList = glob.glob('*.txt')
 leg=[]
-for filename in list:
+for filename in playerBulletList:
     f = open(filename, 'r')
     a = f.readlines()
 
@@ -57,9 +57,9 @@ for filename in list:
     #ax.legend(filename)
 
     
-list = glob.glob('*.dat')
+playerBulletList = glob.glob('*.dat')
 
-for filename in list:    
+for filename in playerBulletList:    
     xrs = np.loadtxt(filename)
     xrsx=xrs[:,0]
     xrsy=xrs[:,1]

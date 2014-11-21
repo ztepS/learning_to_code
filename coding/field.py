@@ -10,6 +10,15 @@ import math
 import random
 random.seed()
 
+class ball:
+    def __init__(self,X,Y):
+        self.X=X
+        self.Y=Y
+        self.speedX=0
+        self.speedY=0
+    #def process_movement(self):
+        #speedX+=(math.cos(test.arrow_list[1,1].rotation*3.14/180))
+    
 class arrow:
     def __init__(self,X,Y):
         self.rotation = random.randrange(0, 359)
@@ -77,9 +86,10 @@ class field:
             print ""
         
 
-xCount=40
-yCount=30            
+xCount=60
+yCount=60            
 test = field(xCount,yCount)
+
 
 
     

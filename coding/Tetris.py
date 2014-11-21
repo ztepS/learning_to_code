@@ -26,16 +26,16 @@ def check_lines():
                     fig.score += 1000
                     print fig.score
 def redraw():
-    pygame.draw.rect(window, (0, 0, 0), (0, 0, 480, 640))
+    pygame.drawSimpleCircle.rect(window, (0, 0, 0), (0, 0, 480, 640))
     for i in range(12):
         for j in range(10):
             if(screenArray[i][j] == 1):
-                pygame.draw.rect(window, (255, 255, 255), ((48 * j) + 5, 596 - ((48 * i) + 5), 36, 36)) 
+                pygame.drawSimpleCircle.rect(window, (255, 255, 255), ((48 * j) + 5, 596 - ((48 * i) + 5), 36, 36)) 
     pygame.display.flip()
     
 def deleteline(lineN):
 
-    fig.draw(0)
+    fig.drawSimpleCircle(0)
     for k in range((lineN), 11):
         # screenArray[k]=screenArray[k+1]
         for i in range(10):
@@ -50,7 +50,7 @@ class figure:
         self.firstrun = 1
         self.reinit()
         
-    def draw(self, data):
+    def drawSimpleCircle(self, data):
         for i in range(self.shapeDimX):
             for j in range(self.shapeDimY):
                 if (self.shape[i][j] == 1): 
@@ -60,7 +60,7 @@ class figure:
         self.X = 4
         self.Y = 12
         if self.firstrun == 0: 
-            self.draw(0)
+            self.drawSimpleCircle(0)
             check_lines()
         self.type = random.randrange(1, 8)
         if (self.type > 2):
@@ -78,7 +78,7 @@ class figure:
             self.shape[i] = range(self.shapeDimY)
             for j in range(self.shapeDimY):
                 self.shape[i][j] = 0
-        self.draw(0)
+        self.drawSimpleCircle(0)
         if (self.type == 1): 
             self.shape[0][0] = 1
             self.shape[1][0] = 1
@@ -115,7 +115,7 @@ class figure:
             self.shape[1][1] = 1
             self.shape[2][1] = 1
         self.check_lose()
-        self.draw(1)
+        self.drawSimpleCircle(1)
         redraw()
         self.firstrun = 0
         
@@ -169,12 +169,12 @@ class figure:
         else: return 0
         
     def move(self, moveId):
-        self.draw(0)
+        self.drawSimpleCircle(0)
         if (moveId == 0):
             if(self.check_down() == 0):
                 self.Y = self.Y - 1
             else:
-                self.draw(1) 
+                self.drawSimpleCircle(1) 
                 self.reinit()
 
         elif(moveId == 1):
@@ -184,7 +184,7 @@ class figure:
             if (self.X > 1) and (self.check_left() == 0):
                 self.X = self.X - 1 
             
-        self.draw(1)
+        self.drawSimpleCircle(1)
         redraw() 
     
     def check_rotate(self):
@@ -198,7 +198,7 @@ class figure:
         
     def rotate(self):
         if(self.check_rotate() == 0):
-            self.draw(0)
+            self.drawSimpleCircle(0)
             self.shape2 = self.shape
             
             
@@ -213,7 +213,7 @@ class figure:
                     self.shape[i][j] = self.shape2[j][self.shapeDimX - i - 1]
            
           
-            self.draw(1) 
+            self.drawSimpleCircle(1) 
             redraw() 
         
         
