@@ -17,7 +17,6 @@
 
 
 
-
 import random
 import itertools
 import time
@@ -26,6 +25,10 @@ import cPickle
 import os
 import pyodbc
 import sys
+
+
+reload(sys)  
+sys.setdefaultencoding('utf8')
 #from groupInterface import Ui_Dialog
 from PyQt4 import QtGui, QtCore
 
@@ -564,17 +567,10 @@ def PhaseThree():
     ui.progressBar1.setValue(100)                
     print len(resultListE), len(resultListK)    
     
-# loop 1
-
-#app = QApplication(sys.argv)
-#window = QDialog()
-#ui = Ui_Dialog()
-#ui.setupUi(window)
-#
-#window.show()
 
 
-#app.connect(Ui_Dialog.searchButton, Qt.SIGNAL("clicked()"), phaseOne())  
+
+
   
 def Cleanup():
     global picklesMaximum
@@ -651,9 +647,9 @@ app.connect(ui.searchButton, QtCore.SIGNAL("clicked()"), Search)
 print (time.time() - timeStart) / 60, " min."
 
 
-sys.exit(app.exec_())
+app.exec_()
 
-
+#raw_input("")
 
 
 
