@@ -12,8 +12,9 @@
 #        use integers?
 #        is double search on pz needed?
 #        selection algorythm is still bad
-
-#        S0!!!
+#    
+#        ? mark in window
+#        lag on alt-tab
 
 
 
@@ -175,8 +176,8 @@ def GetRealData():
     
     # cursor.execute(u"SELECT DISTINCTROW zerki.нПодложки, zerki.Тзер, zerki.Сигма, zerki.L0, zerki.МесХран, zerki.Ячейка, zerki.Рсферы FROM zerki WHERE (((zerki.[Материал подл]) Is Null) AND ((zerki.ГОтказ)='Годен') AND ((zerki.Вкомп)='Свободно') AND ((zerki.НранВоз) Is Null));")
     if(ui.checkBox.isChecked()==0): 
-        cursor.execute(u"SELECT DISTINCTROW zerki.нПодложки, zerki.Тзер, zerki.Сигма, zerki.L0, zerki.МесХран, zerki.Ячейка, zerki.Рсферы, zerki.[Годен для Тамбова], zerki.MaxS FROM zerki WHERE (((zerki.[Материал подл]) Is Null) AND ((zerki.ГОтказ)='Годен') AND ((zerki.Вкомп)='Свободно') AND ((zerki.НранВоз) Is Null)) AND zerki.[Годен для Тамбова] <>'тт';")
-    else: cursor.execute(u"SELECT DISTINCTROW zerki.нПодложки, zerki.Тзер, zerki.Сигма, zerki.L0, zerki.МесХран, zerki.Ячейка, zerki.Рсферы, zerki.[Годен для Тамбова], zerki.MaxS FROM zerki WHERE (((zerki.[Материал подл]) Is Null) AND ((zerki.ГОтказ)='Годен') AND ((zerki.Вкомп)='Свободно') AND ((zerki.НранВоз) Is Null));")
+        cursor.execute(u"SELECT DISTINCTROW zerki.нПодложки, zerki.Тзер, zerki.Сигма, zerki.L0, zerki.МесХран, zerki.Ячейка, zerki.Рсферы, zerki.[Годен для Тамбова], zerki.MaxS FROM zerki WHERE (((zerki.[Материал подл]) Is Null) AND ((zerki.ГОтказ)='Годен') AND ((zerki.Вкомп)='Свободно') AND ((zerki.НранВоз) Is Null)) AND (zerki.[Годен для Тамбова] Is Null OR zerki.[Годен для Тамбова] ='Т' OR zerki.[Годен для Тамбова] ='к5' ) AND zerki.МесХран Is Not Null AND zerki.Ячейка Is Not Null;")
+    else: cursor.execute(u"SELECT DISTINCTROW zerki.нПодложки, zerki.Тзер, zerki.Сигма, zerki.L0, zerki.МесХран, zerki.Ячейка, zerki.Рсферы, zerki.[Годен для Тамбова], zerki.MaxS FROM zerki WHERE (((zerki.[Материал подл]) Is Null) AND ((zerki.ГОтказ)='Годен') AND ((zerki.Вкомп)='Свободно') AND ((zerki.НранВоз) Is Null)) AND zerki.МесХран Is Not Null AND zerki.Ячейка Is Not Null AND (zerki.[Годен для Тамбова] Is Null OR zerki.[Годен для Тамбова] ='Т' OR zerki.[Годен для Тамбова] ='тт' OR zerki.[Годен для Тамбова] ='к5');")
 
     # AND zerki.[Годен для Тамбова] <>'тт'
     data = cursor.fetchall()
@@ -503,6 +504,7 @@ def PhaseThree():
         if i[4] > 0:
             result = [2, i[2], i[4]]
             unitedFreqList.append(result)
+            print result
             flatCount += 1
     
     for i in sphereList:
@@ -519,8 +521,11 @@ def PhaseThree():
     
     unitedFreqList.sort(cmp=None, key=lambda unitedFreqList: unitedFreqList[2], reverse=False)
     
+    print unitedFreqList
     
     maxPossibleCombinations = min(flatCount, piezoCount, sphereCount)
+    #maxPossibleCombinations=flatCount
+    
     print maxPossibleCombinations
     
     
@@ -547,12 +552,14 @@ def PhaseThree():
             if(result <> 0):
                       
                 MakeUsed(result)
-                print(result)
+                
+                
 #                delta = piezoList[result[0]][0] + piezoList[result[1]][0] + flatList[result[2]][0] + sphereList[result[3]][0]
                 L0 = piezoList[result[0]][1] + piezoList[result[1]][1] + flatList[result[2]][1] + sphereList[result[3]][1]
+                print result, L0
                 
-                if(L0 < maxL0E and L0 > minL0E): resultListE.append(result)
-                if(L0 < maxL0K and L0 > minL0K): resultListK.append(result)
+                if(L0 <= maxL0E and L0 >= minL0E): resultListE.append(result)
+                if(L0 <= maxL0K and L0 >= minL0K): resultListK.append(result)
                 combinationCount += 1
                 
                 defragCounter += 1
@@ -566,12 +573,7 @@ def PhaseThree():
     
     ui.progressBar1.setValue(100)                
     print len(resultListE), len(resultListK)    
-    
-
-
-
-
-  
+     
 def Cleanup():
     global picklesMaximum
     for i in range(picklesMaximum):
