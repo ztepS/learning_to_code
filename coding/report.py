@@ -29,7 +29,7 @@ def return_count(mType,mat,rad,podl):
     
 
     if(podl==0):
-        db = pyodbc.connect('DSN=zerki_local')
+        db = pyodbc.connect('DSN=zerki_current')
         sqlQuery=u"SELECT Count(Zerki.[нПодложки]) AS count FROM Zerki WHERE (((Zerki.[Вкомп])='свободно') AND ((Zerki.[МесХран]) Is Not Null) AND ((Zerki.[Ячейка]) Is Not Null) AND ((Zerki.[Тзер])='"+mirrorType+"') AND ((Zerki.[Материал подл]) "+material+") AND ((Zerki.[ГОтказ])='годен') AND ((Zerki.[Рсферы]) "+radius+"));"
     else:
         db = pyodbc.connect('DSN=podl_local')

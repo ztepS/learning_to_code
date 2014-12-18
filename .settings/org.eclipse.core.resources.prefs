@@ -1,6 +1,8 @@
 eclipse.preferences.version=1
 encoding//coding/GUI_Qt4.py=utf-8
+encoding//coding/Lef_data.py=utf-8
 encoding//coding/group.py=utf-8
+encoding//coding/group_thoughts.py=utf-8
 encoding//coding/odbc_hystogram.py=utf-8
 encoding//coding/odbc_test.py=utf-8
 encoding//coding/report.py=utf-8

@@ -171,7 +171,7 @@ def GetRealData():
     global flatListFull, sphereListFull, piezoListFull
     
     
-    db = pyodbc.connect('DSN=zerki_local')
+    db = pyodbc.connect('DSN=zerki_current') #zerki_local zerki_current
     cursor = db.cursor()
     
     # cursor.execute(u"SELECT DISTINCTROW zerki.нПодложки, zerki.Тзер, zerki.Сигма, zerki.L0, zerki.МесХран, zerki.Ячейка, zerki.Рсферы FROM zerki WHERE (((zerki.[Материал подл]) Is Null) AND ((zerki.ГОтказ)='Годен') AND ((zerki.Вкомп)='Свободно') AND ((zerki.НранВоз) Is Null));")
@@ -179,7 +179,7 @@ def GetRealData():
         cursor.execute(u"SELECT DISTINCTROW zerki.нПодложки, zerki.Тзер, zerki.Сигма, zerki.L0, zerki.МесХран, zerki.Ячейка, zerki.Рсферы, zerki.[Годен для Тамбова], zerki.MaxS FROM zerki WHERE (((zerki.[Материал подл]) Is Null) AND ((zerki.ГОтказ)='Годен') AND ((zerki.Вкомп)='Свободно') AND ((zerki.НранВоз) Is Null)) AND (zerki.[Годен для Тамбова] Is Null OR zerki.[Годен для Тамбова] ='Т' OR zerki.[Годен для Тамбова] ='к5' ) AND zerki.МесХран Is Not Null AND zerki.Ячейка Is Not Null;")
     else: cursor.execute(u"SELECT DISTINCTROW zerki.нПодложки, zerki.Тзер, zerki.Сигма, zerki.L0, zerki.МесХран, zerki.Ячейка, zerki.Рсферы, zerki.[Годен для Тамбова], zerki.MaxS FROM zerki WHERE (((zerki.[Материал подл]) Is Null) AND ((zerki.ГОтказ)='Годен') AND ((zerki.Вкомп)='Свободно') AND ((zerki.НранВоз) Is Null)) AND zerki.МесХран Is Not Null AND zerki.Ячейка Is Not Null AND (zerki.[Годен для Тамбова] Is Null OR zerki.[Годен для Тамбова] ='Т' OR zerki.[Годен для Тамбова] ='тт' OR zerki.[Годен для Тамбова] ='к5');")
 
-    # AND zerki.[Годен для Тамбова] <>'тт'
+ 
     data = cursor.fetchall()
     
     
