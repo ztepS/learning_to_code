@@ -145,7 +145,7 @@ def PrintResultList(resultList):
         groupStr += str(piezoListFull[i[1]][0]) + "(" + str(piezoListFull[i[1]][4]) + "-" + str(piezoListFull[i[1]][5]) + ") "
         groupStr += str(flatListFull[i[2]][0]) + "(" + str(flatListFull[i[2]][4]) + "-" + str(flatListFull[i[2]][5]) + ") "
         groupStr += str(sphereListFull[i[3]][0]) + "(" + str(sphereListFull[i[3]][4]) + "-" + str(sphereListFull[i[3]][5]) + ") "
-        groupStr += "L0 = " + str(L0) + " delta = " + str(round(delta, 3)) + "\n"
+        groupStr += "L0 = " + str(L0) + " delta = " + str(round(delta, 3)) + "\n\n"
         file1.write(groupStr)
                
 def PrintResultDataConsole(typeList):
@@ -171,7 +171,7 @@ def GetRealData():
     global flatListFull, sphereListFull, piezoListFull
     
     
-    db = pyodbc.connect('DSN=zerki_current') #zerki_local zerki_current
+    db = pyodbc.connect('DSN=zerki_local') #zerki_local zerki_current
     cursor = db.cursor()
     
     # cursor.execute(u"SELECT DISTINCTROW zerki.нПодложки, zerki.Тзер, zerki.Сигма, zerki.L0, zerki.МесХран, zerki.Ячейка, zerki.Рсферы FROM zerki WHERE (((zerki.[Материал подл]) Is Null) AND ((zerki.ГОтказ)='Годен') AND ((zerki.Вкомп)='Свободно') AND ((zerki.НранВоз) Is Null));")
@@ -182,6 +182,8 @@ def GetRealData():
  
     data = cursor.fetchall()
     
+    
+    print "fetched"
     
     global flatListFull
     global piezoListFull
@@ -506,7 +508,7 @@ def PhaseThree():
             unitedFreqList.append(result)
             print result
             flatCount += 1
-    
+#        else: print flatListFull[i[2]], i
     for i in sphereList:
         if i[4] > 0:
             result = [3, i[2], i[4]]
@@ -583,9 +585,9 @@ def Cleanup():
 def FileOutput():
     global resultListK, resultListE, file1 
     file1 = open("group.txt", 'w')
-    file1.write("K-5:\n")
+    file1.write("K-5:\n\n")
     PrintResultList(resultListK)
-    file1.write("\nЭK-104:\n")
+    file1.write("\nЭK-104:\n\n")
     PrintResultList(resultListE)
     file1.close()
     os.system("start " + "group.txt")       
