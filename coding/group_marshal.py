@@ -14,14 +14,16 @@
 #        selection algorythm is still bad
 #    
 #        ? mark in window
-#        zeradur
-#        marshal????
+#        
+#        zeradur 
 
+ 
+import marshal
 import random
 import itertools
 import time
 import datetime
-import cPickle
+#import cPickle
 import os
 import pyodbc
 import sys
@@ -70,7 +72,6 @@ class ImageDialog(QtGui.QDialog):
 
 # Set up the user interface from Designer.
         self.ui = uic.loadUi("group_new.ui")
-        
         self.ui.show()
 #        self.ui.dateEdit.setDateTime(QtCore.QDateTime.currentDateTime())
 ## Make some local modifications.
@@ -127,7 +128,7 @@ def GetRealData():
     db = pyodbc.connect('DSN=zerki_local') #zerki_local zerki_current
     cursor = db.cursor()
     
-    # cursor.execute(u"SELECT DISTINCTROW zerki.нПодложки, zerki.Тзер, zerki.Сигма, zerki.L0, zerki.МесХран, zerki.Ячейка, zerki.Рсферы FROM zerki WHERE (((zerki.[Материал подл]) Is Null) AND ((zerki.ГОтказ)='Годен') AND ((zerki.Вкомп)='Свободно') AND ((zerki.НранВоз) Is Null));")
+    # cursor.execute(u"SELECT DISTINCTROW zerki.���������, zerki.����, zerki.�����, zerki.L0, zerki.�������, zerki.������, zerki.������ FROM zerki WHERE (((zerki.[�������� ����]) Is Null) AND ((zerki.������)='�����') AND ((zerki.�����)='��������') AND ((zerki.�������) Is Null));")
     if(window.ui.checkBox.isChecked()==0): 
         cursor.execute(u"SELECT DISTINCTROW zerki.нПодложки, zerki.Тзер, zerki.Сигма, zerki.L0, zerki.МесХран, zerki.Ячейка, zerki.Рсферы, zerki.[Годен для Тамбова], zerki.MaxS FROM zerki WHERE (((zerki.[Материал подл]) Is Null) AND ((zerki.ГОтказ)='Годен') AND ((zerki.Вкомп)='Свободно') AND ((zerki.НранВоз) Is Null)) AND (zerki.[Годен для Тамбова] Is Null OR zerki.[Годен для Тамбова] ='Т' OR zerki.[Годен для Тамбова] ='к5' ) AND zerki.МесХран Is Not Null AND zerki.Ячейка Is Not Null;")
     else: cursor.execute(u"SELECT DISTINCTROW zerki.нПодложки, zerki.Тзер, zerki.Сигма, zerki.L0, zerki.МесХран, zerki.Ячейка, zerki.Рсферы, zerki.[Годен для Тамбова], zerki.MaxS FROM zerki WHERE (((zerki.[Материал подл]) Is Null) AND ((zerki.ГОтказ)='Годен') AND ((zerki.Вкомп)='Свободно') AND ((zerki.НранВоз) Is Null)) AND zerki.МесХран Is Not Null AND zerki.Ячейка Is Not Null AND (zerki.[Годен для Тамбова] Is Null OR zerki.[Годен для Тамбова] ='Т' OR zerki.[Годен для Тамбова] ='тт' OR zerki.[Годен для Тамбова] ='к5');")
@@ -154,9 +155,10 @@ def GetRealData():
     sphereList = []
     piezoList = []
     
-    if(window.ui.countLimit.isChecked()==1): 
-        countLimit=100
-    else: countLimit=9999
+    if(window.ui.countLimit.isChecked()==1):  
+        countLimit=100 
+    else: countLimit=9999 
+    
     
     flatCount = 0
     piezoCount = 0
@@ -188,10 +190,13 @@ def GetRealData():
     totalSize = (len(piezoList) * len(piezoList) * len(sphereList) * len(flatList))
     print len(piezoList), len(sphereList), len(flatList)
     
+
+    
 def Store(data, number):
     file1 = "temp." + str(number)
     output = open(file1, 'wb')
-    cPickle.dump(data, output)
+    
+    marshal.dump(data, output)
     output.close()
 
 def DefragmentStorage():
@@ -203,7 +208,7 @@ def DefragmentStorage():
         
         file1 = "temp." + str(j + 1)
         pkl_file = open(file1, 'rb')
-        combinationStoredListOld = cPickle.load(pkl_file)
+        combinationStoredListOld = marshal.load(pkl_file)
         
         for i in combinationStoredListOld:
             
@@ -254,7 +259,7 @@ def CombinationsSearch(combType, combId):
         QtGui.QApplication.processEvents()
         file1 = "temp." + str(j + 1)
         pkl_file = open(file1, 'rb')
-        combinationStoredList = cPickle.load(pkl_file)
+        combinationStoredList = marshal.load(pkl_file)
         for i in combinationStoredList:
             if(i[combType] == combId and CheckUsed(i) == 0): 
                 return i
@@ -291,43 +296,9 @@ def CombinationsSearch(combType, combId):
 #    totalSize = (randomDataSize ** 4) * 4
 
 
-def NewPhaseThreeSearch():
-    global unitedFreqList, copyFreqList
-    global combinationListTemp
-    combinationListTemp=[]
-    
-    unitedFreqList=[]
-    for i in copyFreqList:
-        unitedFreqList.append(i)
-    
-    
-    for j in range(pickles):
-            
-        file1 = "temp." + str(j + 1)
-        pkl_file = open(file1, 'rb')
-        combinationStoredList = cPickle.load(pkl_file)
-        
-        for i in combinationStoredList:
-            
-            
-            for k in unitedFreqList:
-                
-                if(i[k[0]]==k[1] and CheckUsed(i)==0):
-                    combinationListTemp.append(i)
-                    unitedFreqList.remove(k) 
-                    
-#                if(k[0]==0):
-#                    if(i[1]==k[1]):
-#                        combinationListTemp.append(i) 
-#                        unitedFreqList.remove(k)               
-                        
-        pkl_file.close()
 
-    print combinationListTemp
-    
 
 def Search():
-     
     
     timeStart = time.time()
     
@@ -402,10 +373,11 @@ def PhaseOne():
     minDelta = -quotaDelta
     maxDelta = quotaDelta
     
-    if(window.ui.S0checkBox.isChecked()==0): quotaS0=0.007
+    if(window.ui.S0checkBox.isChecked()==0): quotaS0=0.007  
     else: quotaS0=999
         
-    
+    if(window.ui.S0checkBoxEK.isChecked()==0): quotaS0EK=0.007
+    else: quotaS0EK=0
     
     delta = 0
     L0 = 0
@@ -426,12 +398,15 @@ def PhaseOne():
         delta = i[0][0] + i[1][0] + i[2][0] + i[3][0]
 #        try:
         k5=0 
+        EK=0
         L0 = i[0][1] + i[1][1] + i[2][1] + i[3][1]
         if(L0 >= minL0K and L0 <= maxL0K):
             if(i[0][3]<=quotaS0 and i[1][3]<=quotaS0 and i[2][3]<=quotaS0 and i[2][3]<=quotaS0):k5=1
+        if(L0 >= minL0E and L0 <= maxL0E):   
+            if(i[0][3]>quotaS0EK and i[1][3]>quotaS0EK and i[2][3]>quotaS0EK and i[2][3]<=quotaS0):EK=1
 #            else: print  i[0][3], i[1][3], i[2][3], i[3][3]
 #        except TypeError: L0 = 0
-        if(abs(delta) <= maxDelta and ((k5==1) or (L0 >= minL0E and L0 <= maxL0E)) and i[0][2] <> i[1][2]):
+        if(abs(delta) <= maxDelta and ((k5==1) or (EK==1)) and i[0][2] <> i[1][2]):
             combinationListTemp.append([i[0][2], i[1][2], i[2][2], i[3][2]])
             counterGood += 1
         counter += 1
@@ -454,7 +429,7 @@ def PhaseOne():
             counterFile += 1 
             file1 = "temp." + str(counterFile)
             output = open(file1, 'wb')
-            cPickle.dump(combinationListTemp, output)
+            marshal.dump(combinationListTemp, output)
             output.close()
             combinationListTemp = []
             pickles += 1
@@ -466,7 +441,7 @@ def PhaseOne():
     pickles += 1
     file1 = "temp." + str(pickles)
     output = open(file1, 'wb')
-    cPickle.dump(combinationListTemp, output)
+    marshal.dump(combinationListTemp, output)
     output.close()
     window.ui.progressBar1.setValue(100)
     picklesMaximum = pickles
@@ -497,7 +472,7 @@ def PhaseTwo():
         pkl_file = open(file1, 'rb')
         QtGui.QApplication.processEvents()
         print j + 1, " out of", pickles, " to complete phase 2"
-        combinationStoredList = cPickle.load(pkl_file)
+        combinationStoredList = marshal.load(pkl_file)
         for i in combinationStoredList:
            
             flatList[i[2]][4] += 1
@@ -592,107 +567,7 @@ def PhaseThree():
     window.ui.progressBar1.setValue(100)                
     print len(resultListE), len(resultListK)    
      
-def PhaseThreeNew():
-    
-    global pickles, flatList, sphereList, piezoList, resultListK, resultListE, unitedFreqList, finalList, copyFreqList, combinationListTemp
-    
-    flatCount = 0
-    piezoCount = 0
-    sphereCount = 0
-    
-    unitedFreqList = []
-    result = []
-    for i in flatList:
-       
-        if i[4] > 0:
-            result = [2, i[2], i[4]]
-            unitedFreqList.append(result)
-            print result
-            flatCount += 1
-#        else: print flatListFull[i[2]], i
-    for i in sphereList:
-        if i[4] > 0:
-            result = [3, i[2], i[4]]
-            unitedFreqList.append(result)
-            sphereCount += 1
-    
-    for i in piezoList:
-        if i[4] > 0:
-            result = [0, i[2], int(i[4]/2)]
-            unitedFreqList.append(result)
-            piezoCount += 1
-    
-    unitedFreqList.sort(cmp=None, key=lambda unitedFreqList: unitedFreqList[2], reverse=False)
-    
-    copyFreqList=[]
-    for i in unitedFreqList:
-        copyFreqList.append(i)
-    
-    print unitedFreqList
-    
-    maxPossibleCombinations = min(flatCount, piezoCount, sphereCount)
-    #maxPossibleCombinations=flatCount
-    
-    print maxPossibleCombinations
-    
-    NewPhaseThreeSearch()
-    
-    finalList=[]
-    
-    
-    for i in copyFreqList:
-        found = LoopP3N(i)
-        if(found==0):
-            
 
-            DefragmentStorage()
-            NewPhaseThreeSearch()
-
-            found = LoopP3N(i)
-            if(found == 0): print i, " not found"
-                
-    print copyFreqList
-    print finalList            
-    
-    #   needs big rethinking
-    
-    
-    combinationCount = 0
-    result = []
-    defragCounter = 0
-    resultListE = []
-    resultListK = []
-    for i in finalList:
-        result = i
-            # print result,">", i[1] ,"<"
-            
-        if(result <> 0):
-                      
-            MakeUsed(result)
-                
-                
-#                delta = piezoList[result[0]][0] + piezoList[result[1]][0] + flatList[result[2]][0] + sphereList[result[3]][0]
-            L0 = piezoList[result[0]][1] + piezoList[result[1]][1] + flatList[result[2]][1] + sphereList[result[3]][1]
-            print result, L0
-                
-            if(L0 <= maxL0E and L0 >= minL0E): resultListE.append(result)
-            if(L0 <= maxL0K and L0 >= minL0K): resultListK.append(result)
-            combinationCount += 1
-                
-                             
-def LoopP3N(i):
-    
-    global finalList, copyFreqList, combinationListTemp
-    found=0
-    for k in combinationListTemp:     
-#        print i, k   
-        if(k[i[0]]==i[1] and CheckUsed(k)==0):
-            print i
-            found=1
-            finalList.append(k)
-            MakeUsed(k)
-            copyFreqList.remove(i)
-    return found
 
 def Cleanup():
     global picklesMaximum
@@ -754,8 +629,6 @@ counterFile = 0
 app = QtGui.QApplication(sys.argv)
 window = ImageDialog()
 
-
-
 app.connect(window.ui.searchButton, QtCore.SIGNAL("clicked()"), Search)
 
 
@@ -763,7 +636,7 @@ app.connect(window.ui.searchButton, QtCore.SIGNAL("clicked()"), Search)
 
 
 
-sys.exit(app.exec_())
+sys.exit(app.exec_()) 
 
 #raw_input("")
 
